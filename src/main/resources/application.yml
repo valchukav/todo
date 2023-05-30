@@ -1,0 +1,38 @@
+spring:
+  datasource:
+    type: org.apache.tomcat.jdbc.pool.DataSource
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/todo
+    username: avalc
+    password: 123
+    tomcat:
+      initial-size: 15
+      max-wait: 20000
+      max-active: 50
+      max-idle: 15
+      min-idle: 8
+      default-auto-commit: true
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        ddl-auto: false
+        format_sql: true
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+
+logging:
+  pattern:
+    file: "%d{HH:mm:ss} %-5p [%c] - %m%n"
+  level:
+    ROOT: error
+    org.springframework: warn
+    org.springframework.security: warn
+    org.hibernate: warn
+    org.hibernate.type.descriptor.sql: warn
+    org.jboss.weld.*: warn
+  file:
+    name: C:\Users\avalc\Desktop\Java\javabegin\todo-backend\temp\app.log
