@@ -45,6 +45,11 @@ public class Category {
     @PositiveOrZero(message = "Invalid uncompleted count: the value must be greater than or equal to zero")
     private Long uncompletedCount;
 
+    public Category(Long id, String title) {
+        this.id = id;
+        this.title = title;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

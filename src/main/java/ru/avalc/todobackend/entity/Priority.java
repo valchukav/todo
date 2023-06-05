@@ -41,6 +41,11 @@ public class Priority {
     @Size(min = 3, max = 45, message = "invalid color: must be of 3 - 45 characters")
     private String color;
 
+    public Priority(String title, String color) {
+        this.title = title;
+        this.color = color;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
