@@ -1,11 +1,14 @@
 package ru.avalc.todobackend.entity;
 
-import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 /**
@@ -26,10 +29,16 @@ public class Priority {
 
     @Basic
     @Column(name = "title")
+    @NotNull(message = "Missed param: title")
+    @NotBlank(message = "Missed param: title")
+    @Size(min = 3, max = 45, message = "invalid title: must be of 3 - 45 characters")
     private String title;
 
     @Basic
     @Column(name = "color")
+    @NotNull(message = "Missed param: color")
+    @NotBlank(message = "Missed param: color")
+    @Size(min = 3, max = 45, message = "invalid color: must be of 3 - 45 characters")
     private String color;
 
     @Override

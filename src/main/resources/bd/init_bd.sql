@@ -8,7 +8,7 @@ set time zone 'UTC';
 create table priority
 (
     id    bigserial primary key,
-    title varchar(45) not null unique ,
+    title varchar(45) not null unique,
     color varchar(45) not null
 );
 
@@ -30,11 +30,11 @@ create table category
 create table task
 (
     id          bigserial primary key,
-    title       varchar(100) not null unique ,
+    title       varchar(100) not null unique,
     completed   int default (0),
     date        date,
-    priority_id bigint          references priority (id) on DELETE set null,
-    category_id bigint          references category (id) on DELETE set null
+    priority_id bigint       references priority (id) on DELETE set null,
+    category_id bigint       references category (id) on DELETE set null
 );
 
 create index idx_task_completed on task (completed);

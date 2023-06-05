@@ -1,11 +1,12 @@
 package ru.avalc.todobackend.entity;
 
-import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.*;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.Objects;
 
 /**
@@ -26,10 +27,12 @@ public class Stat {
 
     @Basic
     @Column(name = "completed_total")
+    @PositiveOrZero(message = "Invalid completed total count: the value must be greater than or equal to zero")
     private Long completedTotal;
 
     @Basic
     @Column(name = "uncompleted_total")
+    @PositiveOrZero(message = "Invalid uncompleted total count: the value must be greater than or equal to zero")
     private Long uncompletedTotal;
 
     @Override

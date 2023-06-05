@@ -1,11 +1,15 @@
 package ru.avalc.todobackend.entity;
 
-import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 /**
@@ -26,14 +30,19 @@ public class Category {
 
     @Basic
     @Column(name = "title")
+    @NotNull(message = "Missed param: title")
+    @NotBlank(message = "Missed param: title")
+    @Size(min = 3, max = 45, message = "invalid title: must be of 3 - 45 characters")
     private String title;
 
     @Basic
     @Column(name = "completed_count")
+    @PositiveOrZero(message = "Invalid completed count: the value must be greater than or equal to zero")
     private Long completedCount;
 
     @Basic
     @Column(name = "uncompleted_count")
+    @PositiveOrZero(message = "Invalid uncompleted count: the value must be greater than or equal to zero")
     private Long uncompletedCount;
 
     @Override
