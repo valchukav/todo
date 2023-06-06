@@ -1,16 +1,26 @@
 package ru.avalc.todobackend.controller;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.avalc.todobackend.controller.util.JsonUtil;
 import ru.avalc.todobackend.entity.Category;
+import ru.avalc.todobackend.search.CategorySearchValues;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.avalc.todobackend.controller.util.TestUtil.readFromJsonMvcResult;
+import static ru.avalc.todobackend.controller.util.TestUtil.readListFromJsonMvcResult;
 
 /**
  * @author Alexei Valchuk, 05.06.2023, email: a.valchukav@gmail.com
@@ -97,5 +107,48 @@ public class CategoryControllerTest extends AbstractControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.writeValue(NOT_EXISTED_CATEGORY)))
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void getAllSortedByTitleAsc() throws Exception {
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/category/all"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        List<Category> categories = readListFromJsonMvcResult(result, Category.class);
+
+        assertFalse(categories.isEmpty());
+        assertTrue(categories.get(0).getTitle().equalsIgnoreCase("Здоровье"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("ru.avalc.todobackend.controller.CategoryControllerTest#argumentsForGetAllWithTitleFilter")
+    void getAllWithTitleFilter(String title, String expectedFirstTitle, boolean isEmpty) throws Exception {
+        CategorySearchValues categorySearchValues = new CategorySearchValues();
+        categorySearchValues.setTitle(title);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/category/search")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.writeValue(categorySearchValues)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        List<Category> categories = readListFromJsonMvcResult(result, Category.class);
+
+        assertEquals(categories.isEmpty(), isEmpty);
+        try {
+            assertTrue(categories.get(0).getTitle().equalsIgnoreCase(expectedFirstTitle));
+        } catch (IndexOutOfBoundsException ignored) {
+        }
+    }
+
+    private static Stream<Arguments> argumentsForGetAllWithTitleFilter() {
+        return Stream.of(
+                Arguments.of("", "Здоровье", false),
+                Arguments.of(null, "Здоровье", false),
+                Arguments.of("овая", "Новая категория", false),
+                Arguments.of("smth", null, true)
+        );
     }
 }

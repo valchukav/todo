@@ -1,16 +1,26 @@
 package ru.avalc.todobackend.controller;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.avalc.todobackend.controller.util.JsonUtil;
 import ru.avalc.todobackend.entity.Priority;
+import ru.avalc.todobackend.search.PrioritySearchValues;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.avalc.todobackend.controller.util.TestUtil.readFromJsonMvcResult;
+import static ru.avalc.todobackend.controller.util.TestUtil.readListFromJsonMvcResult;
 
 /**
  * @author Alexei Valchuk, 05.06.2023, email: a.valchukav@gmail.com
@@ -97,5 +107,48 @@ public class PriorityControllerTest extends AbstractControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.writeValue(NOT_EXISTED_PRIORITY)))
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void getAllSortedByIdAsc() throws Exception {
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/priority/all"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        List<Priority> priorities = readListFromJsonMvcResult(result, Priority.class);
+
+        assertFalse(priorities.isEmpty());
+        assertTrue(priorities.get(0).getTitle().equalsIgnoreCase("Низкий"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("ru.avalc.todobackend.controller.PriorityControllerTest#argumentsForGetAllWithTitleFilter")
+    void getAllWithTitleFilter(String title, String expectedFirstTitle, boolean isEmpty) throws Exception {
+        PrioritySearchValues prioritySearchValues = new PrioritySearchValues();
+        prioritySearchValues.setTitle(title);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/priority/search")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.writeValue(prioritySearchValues)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        List<Priority> priorities = readListFromJsonMvcResult(result, Priority.class);
+
+        assertEquals(priorities.isEmpty(), isEmpty);
+        try {
+            assertTrue(priorities.get(0).getTitle().equalsIgnoreCase(expectedFirstTitle));
+        } catch (IndexOutOfBoundsException ignored) {
+        }
+    }
+
+    private static Stream<Arguments> argumentsForGetAllWithTitleFilter() {
+        return Stream.of(
+                Arguments.of("", "вЗапредельно высокий", false),
+                Arguments.of(null, "вЗапредельно высокий", false),
+                Arguments.of("запред", "вЗапредельно высокий", false),
+                Arguments.of("smth", null, true)
+        );
     }
 }

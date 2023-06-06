@@ -6,7 +6,9 @@ TRUNCATE TABLE task CASCADE;
 INSERT INTO priority
 VALUES (56, 'Низкий', '#caffdd'),
        (57, 'Средний', '#883bdc'),
-       (58, 'Высокий', '#f05f5f');
+       (58, 'Высокий', '#f05f5f'),
+       (59, 'Запредельно низкий', '#fff'),
+       (60, 'вЗапредельно высокий', '#fff');
 
 INSERT INTO category (id, title)
 VALUES (167, 'Семья'),
@@ -37,5 +39,5 @@ VALUES (328, 'Позвонить родителям', 1, '2020-04-29 15:27:11', 
        (356, 'Доделать отчеты', 1, '2020-04-30 09:38:20', NULL, 168),
        (358, 'Задача по категории', 0, '2020-05-01 12:01:18', 58, 170);
 
-insert into stat (completed_total, uncompleted_total)
-values ((select count(*) from task where completed = 1), (select count(*) from task where completed = 0));
+insert into stat (id, completed_total, uncompleted_total)
+values (1, (select count(*) from task where completed = 1), (select count(*) from task where completed = 0));
