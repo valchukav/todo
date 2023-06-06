@@ -2,7 +2,6 @@ package ru.avalc.todobackend.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.avalc.todobackend.entity.Stat;
@@ -17,7 +16,6 @@ import static ru.avalc.todobackend.controller.util.TestUtil.readFromJsonMvcResul
  * @author Alexei Valchuk, 05.06.2023, email: a.valchukav@gmail.com
  */
 
-@Sql(scripts = "classpath:bd/populate_db.sql")
 public class StatControllerTest extends AbstractControllerTest {
 
     @Test

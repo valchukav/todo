@@ -5,7 +5,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.avalc.todobackend.controller.util.JsonUtil;
@@ -26,7 +25,6 @@ import static ru.avalc.todobackend.controller.util.TestUtil.readListFromJsonMvcR
  * @author Alexei Valchuk, 05.06.2023, email: a.valchukav@gmail.com
  */
 
-@Sql(scripts = "classpath:bd/populate_db.sql")
 public class PriorityControllerTest extends AbstractControllerTest {
 
     private static final Priority PRIORITY_1 = new Priority(56L, "Низкий", "#caffdd");
