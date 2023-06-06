@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.*;
 import ru.avalc.todobackend.controller.exception.InvalidIDException;
 import ru.avalc.todobackend.entity.Priority;
 import ru.avalc.todobackend.repo.PriorityRepository;
+import ru.avalc.todobackend.search.PrioritySearchValues;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -73,5 +75,15 @@ public class PriorityController {
         } else {
             priorityRepository.deleteById(id);
         }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Priority>> getAll() {
+        return ResponseEntity.ok(priorityRepository.findAllByOrderByIdAsc());
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<List<Priority>> search(@RequestBody PrioritySearchValues searchValues) {
+        return ResponseEntity.ok(priorityRepository.findByTitle(searchValues.getTitle()));
     }
 }
