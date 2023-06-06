@@ -5,8 +5,10 @@ import org.springframework.web.bind.annotation.*;
 import ru.avalc.todobackend.controller.exception.InvalidIDException;
 import ru.avalc.todobackend.entity.Category;
 import ru.avalc.todobackend.repo.CategoryRepository;
+import ru.avalc.todobackend.search.CategorySearchValues;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -71,5 +73,15 @@ public class CategoryController {
         } else {
             categoryRepository.deleteById(id);
         }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Category>> getAll() {
+        return ResponseEntity.ok(categoryRepository.findAllByOrderByTitleAsc());
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<List<Category>> search(@RequestBody CategorySearchValues searchValues) {
+        return ResponseEntity.ok(categoryRepository.findByTitle(searchValues.getTitle()));
     }
 }
