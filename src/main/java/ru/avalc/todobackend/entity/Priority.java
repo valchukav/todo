@@ -28,7 +28,7 @@ public class Priority {
     private Long id;
 
     @Basic
-    @Column(name = "title")
+    @Column(name = "title", unique = true)
     @NotNull(message = "Missed param: title")
     @NotBlank(message = "Missed param: title")
     @Size(min = 3, max = 45, message = "invalid title: must be of 3 - 45 characters")
