@@ -13,6 +13,7 @@ import java.util.List;
  * @author Alexei Valchuk, 04.06.2023, email: a.valchukav@gmail.com
  */
 
+@CrossOrigin(origins = "http://localhost:4200/")
 @RestController
 @RequestMapping("/category")
 public class CategoryController {

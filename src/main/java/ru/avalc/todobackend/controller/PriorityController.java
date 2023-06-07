@@ -14,6 +14,7 @@ import java.util.List;
  * @author Alexei Valchuk, 31.05.2023, email: a.valchukav@gmail.com
  */
 
+@CrossOrigin(origins = "http://localhost:4200/")
 @RestController
 @RequestMapping("/priority")
 public class PriorityController {

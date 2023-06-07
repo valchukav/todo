@@ -15,6 +15,7 @@ import java.util.List;
  * @author Alexei Valchuk, 06.06.2023, email: a.valchukav@gmail.com
  */
 
+@CrossOrigin(origins = "http://localhost:4200/")
 @RestController
 @RequestMapping("/task")
 public class TaskController {
