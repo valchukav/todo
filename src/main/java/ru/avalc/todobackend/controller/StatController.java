@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.avalc.todobackend.entity.Stat;
-import ru.avalc.todobackend.repo.StatRepository;
+import ru.avalc.todobackend.service.StatService;
 
 /**
  * @author Alexei Valchuk, 05.06.2023, email: a.valchukav@gmail.com
@@ -16,17 +16,15 @@ import ru.avalc.todobackend.repo.StatRepository;
 @RequestMapping("/stat")
 public class StatController {
 
-    public final static Long DEFAULT_ID = 1L;
-
-    private final StatRepository statRepository;
+    private final StatService statService;
 
     @Autowired
-    public StatController(StatRepository statRepository) {
-        this.statRepository = statRepository;
+    public StatController(StatService statService) {
+        this.statService = statService;
     }
 
     @GetMapping("/get")
     public ResponseEntity<Stat> findById() {
-        return ResponseEntity.ok(statRepository.findById(DEFAULT_ID).get());
+        return ResponseEntity.ok(statService.get());
     }
 }

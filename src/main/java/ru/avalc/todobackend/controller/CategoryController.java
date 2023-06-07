@@ -2,14 +2,12 @@ package ru.avalc.todobackend.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.avalc.todobackend.controller.exception.InvalidIDException;
 import ru.avalc.todobackend.entity.Category;
-import ru.avalc.todobackend.repo.CategoryRepository;
 import ru.avalc.todobackend.search.CategorySearchValues;
+import ru.avalc.todobackend.service.CategoryService;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Alexei Valchuk, 04.06.2023, email: a.valchukav@gmail.com
@@ -19,69 +17,39 @@ import java.util.Optional;
 @RequestMapping("/category")
 public class CategoryController {
 
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
-    public CategoryController(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
     }
 
     @PostMapping("/add")
     public ResponseEntity<Category> add(@RequestBody @Valid Category category) {
-        try {
-            Long id = category.getId();
-            if (id != null || id > 0) {
-                throw new InvalidIDException("id must be null");
-            }
-        } catch (NullPointerException ignored) {
-        }
-
-        return ResponseEntity.ok(categoryRepository.save(category));
+        return ResponseEntity.ok(categoryService.add(category));
     }
 
     @PutMapping("/update")
     public ResponseEntity<Category> update(@RequestBody @Valid Category category) {
-        if (category.getId() == null || category.getId() <= 0) {
-            throw new InvalidIDException("id must be defined");
-        } else {
-            Optional<Category> entity = categoryRepository.findById(category.getId());
-            if (entity.isPresent()) {
-                return ResponseEntity.ok(categoryRepository.save(category));
-            } else {
-                throw new InvalidIDException("Priority with such id does not exist");
-            }
-        }
+        return ResponseEntity.ok(categoryService.update(category));
     }
 
     @GetMapping("/id/{id}")
     public ResponseEntity<Category> findById(@PathVariable Long id) {
-        if (id == null || id <= 0) {
-            throw new InvalidIDException("id must be defined");
-        } else {
-            Optional<Category> entity = categoryRepository.findById(id);
-            if (entity.isPresent()) {
-                return ResponseEntity.ok(entity.get());
-            } else {
-                throw new InvalidIDException("Category with such id does not exist");
-            }
-        }
+        return ResponseEntity.ok(categoryService.get(id));
     }
 
     @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable Long id) {
-        if (id == null || id <= 0) {
-            throw new InvalidIDException("id must be defined");
-        } else {
-            categoryRepository.deleteById(id);
-        }
+        categoryService.delete(id);
     }
 
     @GetMapping("/all")
     public ResponseEntity<List<Category>> getAll() {
-        return ResponseEntity.ok(categoryRepository.findAllByOrderByTitleAsc());
+        return ResponseEntity.ok(categoryService.getAll());
     }
 
     @PostMapping("/search")
     public ResponseEntity<List<Category>> search(@RequestBody CategorySearchValues searchValues) {
-        return ResponseEntity.ok(categoryRepository.findByTitle(searchValues.getTitle()));
+        return ResponseEntity.ok(categoryService.searchByTitle(searchValues));
     }
 }
