@@ -1,7 +1,11 @@
 package ru.avalc.todobackend.controller.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import org.springframework.data.domain.Page;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import ru.avalc.todobackend.entity.Task;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -26,5 +30,10 @@ public class TestUtil {
 
     public static <T> List<T> readListFromJsonMvcResult(MvcResult result, Class<T> clazz) throws UnsupportedEncodingException {
         return JsonUtil.readValues(getContent(result), clazz);
+    }
+
+    public static Page<Task> readPageFromJsonMvcResult(MvcResult result) throws UnsupportedEncodingException, JsonProcessingException {
+        return JacksonObjectMapper.getMapper().readValue(getContent(result), new TypeReference<>() {
+        });
     }
 }

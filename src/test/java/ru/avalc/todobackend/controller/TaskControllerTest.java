@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -13,7 +14,6 @@ import ru.avalc.todobackend.entity.Task;
 import ru.avalc.todobackend.search.TaskSearchValues;
 
 import java.util.Date;
-import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.avalc.todobackend.controller.util.TestUtil.readFromJsonMvcResult;
-import static ru.avalc.todobackend.controller.util.TestUtil.readListFromJsonMvcResult;
+import static ru.avalc.todobackend.controller.util.TestUtil.readPageFromJsonMvcResult;
 
 /**
  * @author Alexei Valchuk, 06.06.2023, email: a.valchukav@gmail.com
@@ -135,7 +135,7 @@ public class TaskControllerTest extends AbstractControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        List<Task> tasks = readListFromJsonMvcResult(result, Task.class);
+        Page<Task> tasks = readPageFromJsonMvcResult(result);
 
         assertEquals(tasks.isEmpty(), isEmpty);
         assertTrue(isBetween(tasks, expectedListSize));
@@ -154,7 +154,7 @@ public class TaskControllerTest extends AbstractControllerTest {
         );
     }
 
-    private static boolean isBetween(List<Task> list, int expectedCount) {
-        return list.size() <= expectedCount + 1 && list.size() >= expectedCount - 1;
+    private static boolean isBetween(Page<Task> list, int expectedCount) {
+        return list.getTotalElements() <= expectedCount + 1 && list.getTotalElements() >= expectedCount - 1;
     }
 }
