@@ -1,6 +1,9 @@
 package ru.avalc.todobackend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.avalc.todobackend.controller.exception.InvalidIDException;
@@ -20,6 +23,8 @@ import java.util.Optional;
 @RequestMapping("/task")
 public class TaskController {
 
+    private final static int DEFAULT_PAGE_SIZE = 20;
+    private final static String DEFAULT_SEARCH_COLUMN = "id";
     private final TaskRepository taskRepository;
 
     @Autowired
@@ -84,13 +89,39 @@ public class TaskController {
 
     @PostMapping("/search")
     public ResponseEntity<List<Task>> search(@RequestBody TaskSearchValues searchValues) {
-        return ResponseEntity.ok(
-                taskRepository.findByParams(
-                        searchValues.getTitle(),
-                        searchValues.getCompleteType(),
-                        searchValues.getPriorityId(),
-                        searchValues.getCategoryId()
-                )
+        List<Task> result = taskRepository.findByParams(
+                searchValues.getTitle() != null ? searchValues.getTitle() : null,
+                searchValues.getCompleteType() != null ? searchValues.getCompleteType() : null,
+                searchValues.getPriorityId() != null ? searchValues.getPriorityId() : null,
+                searchValues.getCategoryId() != null ? searchValues.getCategoryId() : null);
+
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/search_by_page")
+    public ResponseEntity<Page<Task>> searchWithPagination(@RequestBody TaskSearchValues searchValues) {
+        Sort.Direction direction;
+        direction = searchValues.getSortDirection() == null
+                || searchValues.getSortDirection().equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        Sort sort = Sort.by(
+                direction,
+                searchValues.getSortColumn() != null? searchValues.getSortColumn() : DEFAULT_SEARCH_COLUMN
         );
+
+        PageRequest pageRequest = PageRequest.of(
+                searchValues.getPageNumber() != null ? searchValues.getPageNumber() : 0,
+                searchValues.getPageSize() != null ? searchValues.getPageSize() : DEFAULT_PAGE_SIZE,
+                sort
+        );
+
+        Page<Task> result = taskRepository.findByParamsWithPagination(
+                searchValues.getTitle() != null ? searchValues.getTitle() : null,
+                searchValues.getCompleteType() != null ? searchValues.getCompleteType() : null,
+                searchValues.getPriorityId() != null ? searchValues.getPriorityId() : null,
+                searchValues.getCategoryId() != null ? searchValues.getCategoryId() : null,
+                pageRequest);
+
+        return ResponseEntity.ok(result);
     }
 }
