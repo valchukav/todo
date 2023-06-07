@@ -21,7 +21,7 @@ import javax.annotation.PostConstruct;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@Sql(scripts = "classpath:bd/populate_db.sql")
+@Sql(scripts = "classpath:bd/test_populate_db.sql")
 public abstract class AbstractControllerTest {
 
     @Autowired
