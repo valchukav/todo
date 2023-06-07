@@ -48,22 +48,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "(:completeType is null or t.completeType = :completeType) and " +
             "(:priorityId is null or t.priority.id = :priorityId) and " +
             "(:categoryId is null or t.category.id = :categoryId)")
-    List<Task> findByParams(@Param("title") String title,
-                            @Param("completeType") CompleteType completeType,
-                            @Param("priorityId") Long priorityId,
-                            @Param("categoryId") Long categoryId);
-
-    @EntityGraph(
-            type = EntityGraph.EntityGraphType.FETCH,
-            attributePaths = {
-                    "priority", "category"
-            }
-    )
-    @Query("select t from Task t where (:title is null or :title = '' or lower(t.title) like lower(concat('%', :title, '%'))) and" +
-            "(:completeType is null or t.completeType = :completeType) and " +
-            "(:priorityId is null or t.priority.id = :priorityId) and " +
-            "(:categoryId is null or t.category.id = :categoryId)")
-    Page<Task> findByParamsWithPagination(@Param("title") String title,
+    Page<Task> findByParams(@Param("title") String title,
                             @Param("completeType") CompleteType completeType,
                             @Param("priorityId") Long priorityId,
                             @Param("categoryId") Long categoryId,

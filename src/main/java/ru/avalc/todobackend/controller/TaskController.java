@@ -88,18 +88,7 @@ public class TaskController {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<List<Task>> search(@RequestBody TaskSearchValues searchValues) {
-        List<Task> result = taskRepository.findByParams(
-                searchValues.getTitle() != null ? searchValues.getTitle() : null,
-                searchValues.getCompleteType() != null ? searchValues.getCompleteType() : null,
-                searchValues.getPriorityId() != null ? searchValues.getPriorityId() : null,
-                searchValues.getCategoryId() != null ? searchValues.getCategoryId() : null);
-
-        return ResponseEntity.ok(result);
-    }
-
-    @PostMapping("/search_by_page")
-    public ResponseEntity<Page<Task>> searchWithPagination(@RequestBody TaskSearchValues searchValues) {
+    public ResponseEntity<Page<Task>> search(@RequestBody TaskSearchValues searchValues) {
         Sort.Direction direction;
         direction = searchValues.getSortDirection() == null
                 || searchValues.getSortDirection().equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
@@ -115,7 +104,7 @@ public class TaskController {
                 sort
         );
 
-        Page<Task> result = taskRepository.findByParamsWithPagination(
+        Page<Task> result = taskRepository.findByParams(
                 searchValues.getTitle() != null ? searchValues.getTitle() : null,
                 searchValues.getCompleteType() != null ? searchValues.getCompleteType() : null,
                 searchValues.getPriorityId() != null ? searchValues.getPriorityId() : null,
