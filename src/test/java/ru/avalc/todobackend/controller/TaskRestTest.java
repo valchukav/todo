@@ -28,7 +28,7 @@ import static ru.avalc.todobackend.controller.util.TestUtil.readPageFromJsonMvcR
  * @author Alexei Valchuk, 06.06.2023, email: a.valchukav@gmail.com
  */
 
-public class TaskControllerTest extends AbstractControllerTest {
+public class TaskRestTest extends AbstractRestTest {
 
     private static final Task TASK_1 = new Task(328L, "Позвонить родителям", CompleteType.COMPLETED, new Date(), null, null);
     private static final Task TASK_2 = new Task(331L, "Посмотреть мультики", CompleteType.UNCOMPLETED, new Date(), null, null);
@@ -121,7 +121,7 @@ public class TaskControllerTest extends AbstractControllerTest {
     }
 
     @ParameterizedTest
-    @MethodSource("ru.avalc.todobackend.controller.TaskControllerTest#argumentsForGetAllWithTitleFilter")
+    @MethodSource("ru.avalc.todobackend.controller.TaskRestTest#argumentsForGetAllWithTitleFilter")
     void getAllWithFilter(String title, CompleteType completeType, Long priorityId, Long categoryId, int expectedListSize, boolean isEmpty) throws Exception {
         TaskSearchValues taskSearchValues = new TaskSearchValues();
         taskSearchValues.setTitle(title);

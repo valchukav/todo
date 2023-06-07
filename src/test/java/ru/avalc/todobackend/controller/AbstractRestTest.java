@@ -22,7 +22,7 @@ import javax.annotation.PostConstruct;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Sql(scripts = "classpath:bd/test_populate_db.sql")
-public abstract class AbstractControllerTest {
+public abstract class AbstractRestTest {
 
     @Autowired
     protected MockMvc mockMvc;

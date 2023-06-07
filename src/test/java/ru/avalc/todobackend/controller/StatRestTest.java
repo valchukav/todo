@@ -16,7 +16,7 @@ import static ru.avalc.todobackend.controller.util.TestUtil.readFromJsonMvcResul
  * @author Alexei Valchuk, 05.06.2023, email: a.valchukav@gmail.com
  */
 
-public class StatControllerTest extends AbstractControllerTest {
+public class StatRestTest extends AbstractRestTest {
 
     @Test
     void testGet() throws Exception {
