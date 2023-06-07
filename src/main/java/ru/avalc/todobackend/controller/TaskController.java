@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.avalc.todobackend.controller.exception.InvalidIDException;
 import ru.avalc.todobackend.entity.Task;
 import ru.avalc.todobackend.repo.TaskRepository;
+import ru.avalc.todobackend.search.TaskSearchValues;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -79,5 +80,17 @@ public class TaskController {
         } else {
             taskRepository.deleteById(id);
         }
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<List<Task>> search(@RequestBody TaskSearchValues searchValues) {
+        return ResponseEntity.ok(
+                taskRepository.findByParams(
+                        searchValues.getTitle(),
+                        searchValues.getCompleteType(),
+                        searchValues.getPriorityId(),
+                        searchValues.getCategoryId()
+                )
+        );
     }
 }
