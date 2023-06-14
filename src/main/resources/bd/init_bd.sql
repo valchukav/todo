@@ -61,7 +61,7 @@ begin
         where id = new_cat_id;
     end if;
 
-    if (new_cat_id > 0 and new_compl = 1) then
+    if (new_cat_id > 0 and new_compl = 0) then
         update category
         set uncompleted_count = ((select coalesce(c.uncompleted_count, 0)
                                   from category c
@@ -155,7 +155,7 @@ begin
             set uncompleted_count = (
                     (select coalesce(c.uncompleted_count, 0) from category c where c.id = OLD.category_id) -
                     1)
-            where id = OLD.category_id;
+            where id = old_cat_id;
 
             update category
             set uncompleted_count = (
