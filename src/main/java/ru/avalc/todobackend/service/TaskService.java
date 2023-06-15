@@ -22,7 +22,7 @@ import java.util.Optional;
 @Transactional
 public class TaskService {
 
-    private final static int DEFAULT_PAGE_SIZE = 20;
+    private final static int DEFAULT_PAGE_SIZE = 10;
     private final static String DEFAULT_SEARCH_COLUMN = "id";
 
     private final TaskRepository taskRepository;
