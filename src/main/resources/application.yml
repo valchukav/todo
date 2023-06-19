@@ -1,4 +1,7 @@
 spring:
+  jackson:
+    serialization:
+      fail_on_empty_beans: false
   datasource:
     type: org.apache.tomcat.jdbc.pool.DataSource
     driver-class-name: org.postgresql.Driver
